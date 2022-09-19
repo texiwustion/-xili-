@@ -1,0 +1,85 @@
+2022 09 17
+	run1
+struct 在 头文件声明导致 LINK型错误， 应在 源文件中声明
+
+	run2
+draw() 画图函数未生效
+
+	run3
+直接运行 draw(GREEN, 0,0,20,20);  生效 ， 说明可能是坐标问题
+
+	run4
+问题解决： 没有initSnake 就drawSnake 了
+
+	adding...
+初始化食物 initFood 使用time.h库文件
+画食物 使用draw函数
+移动蛇 对第一节用方向，其它节向上覆盖
+
+	run5
+蛇动了，但有点闪烁
+食物不见了，因为cleardevice，所以画食物应当移到循环内
+交互communicate.h .c 使用了extern跨文件使用结构体
+使用了switch + if嵌套实现键盘交互变向操作
+
+2022 09 18
+	解决了
+画图函数未生效
+struct在头文件中定义的错误
+
+	遗留问题
+画面闪烁
+
+	run1
+struct 多文件使用失败   解决： 主文件用SNAKE snake   其他文件 extern SNAKE snake
+
+	run2
+蛇无法检测键盘移动
+
+	run3
+game.h 更改了键值左75上72右77下80 ： 不仅没移动，食物还没了
+
+	run4
+食物没了已解决： 因为又把cleardevice()放在了drawFood()后面
+
+	run5
+食物又没了 运行中时不时又出现 : 食物生在了屏幕外  应当同余32和24才对
+每次都要键入一定东西才能进入游戏
+	
+	run6
+将snake.direction属性改成DOWN，发现可行，于是moveSnake函数没问题
+
+	break
+到达瓶颈，看视频补脑（其实全去看了娱乐视频）
+
+	run7
+将changeDirection()直接放在game.c(定义蛇的那里)，发现可以键盘变向
+
+	run8
+多文件communicate模块实现： 用户键入只获取了一次，将获取键入放入循环体内即可
+
+	发现
+extern结构体声明，#include都可以放在头文件里面
+
+	run9
+解决了闪烁问题 ： 加了beginBatchdraw 与endBatchdraw(批量绘制)，发现蛇不见了，cleardivice放最前面后可以了（逻辑似乎与单图绘画不一样）
+
+	run10
+增加了 吃食物 的功能，发现控制并不是很流畅，而且每次蛇身加长的时候左上角总会出现一个块（大概是加长的部分为{0}的时候就画了）：main里面执行顺序的问题
+我猜批量绘图应该是全部执行完再显示，所以把所有的draw全放在最后，判断全放在前面试试
+
+	run11
+流畅度变高了不少，但是左上角的块还是没有解决
+：把eatfood移到movesnake前面，这样我想在吃饭食物之后新增的一节就能跟上了
+
+	run12
+左上角块问题解决
+下面考虑新增oversnake功能
+
+	run13
+撞墙判定已实现
+发现函数里面不能封装break语句？ 勉强用了一个exit(1)  直接退出程序
+
+	run14
+撞自己判定已实现
+	
